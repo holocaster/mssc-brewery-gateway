@@ -4,7 +4,6 @@ import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 
 @Configuration
 public class LoadBalanceRoutesConfig {
@@ -12,12 +11,12 @@ public class LoadBalanceRoutesConfig {
     @Bean
     public RouteLocator loadBalanceRoute(RouteLocatorBuilder builder) {
         return builder.routes()
-                .route("beer-service-id", r -> r.path("/api/v1/beer/*", "/api/v1/beer*", "/api/v1/beerUpc/*").uri("lb://beer-service"))
-                .route("beer-order-service-id", r -> r.path("/api/v1/customers*", "/api/v1/customers/*").uri("lb://beer-order-service"))
-                .route("beer-inventory-service-id", r -> r.path("/api/v1/beer/*/inventory")
-                        .filters(f -> f.circuitBreaker(c -> c.setName("inventoryCB").setFallbackUri("forward:/inventory-failover").setRouteId("inv-failover")))
+                .route("beer-service", r -> r.path("/api/v1/beer/*", "/api/v1/beer*", "/api/v1/beerUpc/*").uri("lb://beer-service"))
+                .route("beer-order-service", r -> r.path("/api/v1/customers*", "/api/v1/customers/*").uri("lb://beer-order-service"))
+                .route("beer-inventory-service", r -> r.path("/api/v1/beer/*/inventory")
+                        .filters(f -> f.circuitBreaker(c -> c.setName("inventoryCB").setFallbackUri("forward:/inventory-failover").setRouteId("inventory-failover")))
                         .uri("lb://beer-inventory-service"))
-                .route("inventory-failover-id", r -> r.path("/inventory-failover/**").uri("lb://inventory-failover"))
+                .route("inventory-failover", r -> r.path("/inventory-failover/**").uri("lb://inventory-failover"))
                 .build();
 
 //        return builder.routes()
